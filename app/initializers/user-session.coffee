@@ -1,6 +1,4 @@
-initialize = (application, whatever) ->
-  window.App = application
-  window.Whatever = whatever
+initialize = (container, application) ->
   application.inject "controller", "currentUser", "service:user-session"
   application.inject "route", "currentUser", "service:user-session"
   application.inject "adapter", "currentUser", "service:user-session"
