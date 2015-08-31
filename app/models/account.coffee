@@ -1,5 +1,8 @@
+`import Ember from 'ember'`
 `import DS from 'ember-data'`
 `import ENV from '../config/environment'`
+
+alias = Ember.computed.alias
 
 Account = DS.Model.extend
   companyName: DS.attr "string"
