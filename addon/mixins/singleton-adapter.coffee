@@ -6,18 +6,18 @@ SingletonAdapterMixin = Ember.Mixin.create
     Ember.String.singularize camelized
 
   urlForFindRecord: (id, modelName, snapshot) ->
-    @_buildUrl modelName
+    @_buildURL modelName
 
   urlForFindHasMany: (id, modelName) ->
-    @_buildUrl modelName
+    @_buildURL modelName
 
   urlForBelongsTo: (id, modelName) ->
-    @_buildUrl modelName
+    @_buildURL modelName
 
   urlForUpdateRecord: (id, modelName) ->
-    @_buildUrl modelName
+    @_buildURL modelName
 
   urlForDeleteRecord: (id, modelName) -> 
-    @_buildUrl modelName
+    @_buildURL modelName
 
 `export default SingletonAdapterMixin`
