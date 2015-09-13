@@ -11,6 +11,7 @@ Account = DS.Model.extend
   timezone: DS.attr "string"
   namespace: DS.attr "string"
   host: DS.attr "string"
+  roxieKey: DS.attr "string"
   uiuxHost: DS.attr "string", defaultValue: ENV.uiuxHost
   configHost: DS.attr "string", defaultValue: ENV.configHost
   user: DS.belongsTo "user", async: true
