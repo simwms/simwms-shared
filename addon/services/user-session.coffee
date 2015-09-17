@@ -7,14 +7,14 @@ isBlank = Ember.isBlank
 notEmpty = Ember.computed.notEmpty
 
 Errors = Ember.Object.extend
-  hasErrors: ifAny "hasAccountErrors", "hasTokenErrors"
-  hasAccountErrors: notEmpty "account"
+  hasErrors: ifAny "hasEmailErrors", "hasTokenErrors"
   hasTokenErrors: notEmpty "token"
+  hasEmailErrors: notEmpty "email"
   clear: ->
-    @set "account", []
-    @set "token", []
+    @set "token", Ember.A()
+    @set "email", Ember.A()
   addError: (key, msg) ->
-    @getWithDefault(key, []).pushObject msg
+    @getWithDefault(key, Ember.A()).pushObject msg
 
 UserSession = Ember.Service.extend
   isLoggedIn: ifPresent "account.id"
@@ -27,20 +27,33 @@ UserSession = Ember.Service.extend
   checkForErrors: ->
     @errors.clear()
     @setError "token", "cannot be blank" if isBlank(@get "rememberToken")
+    @setError "email", "cannot be blank" if isBlank(@get "employeeEmail")
     @get "hasErrors"
-  configure: ({token}) ->
-    @set "accountId", "singleton"
-    @set "rememberToken", (token ? Cookies.get("rememberToken"))
+  init: ->
+    @_super arguments...
+    @set "employeeEmail", Cookies.get("employeeEmail")
+    @set "rememberToken", Cookies.get("rememberToken")
+    @checkForErrors()
+  configure: ({email, token}) ->
+    @set "employeeEmail", email
+    @set "rememberToken", token
+    @checkForErrors()
   setup: (store) ->
     return @get("p") if @checkForErrors()
 
-    store.find "account", "singleton"
+    store.find "employee", @get("employeeEmail")
+    .then (employee) =>
+      @set "employee", employee
+      Cookies.set("employeeEmail", employee.get("email"))
+      employee.get("account")
     .then (account) =>
       @set "account", account
       Cookies.set("rememberToken", @get("rememberToken"))
       @
     .catch ({errors}) =>
+      @setError "email", "Unrecognized employee email"
       @setError "token", "Unknown token"
+      Cookies.remove "employeeEmail"
       Cookies.remove "rememberToken"
       @
 

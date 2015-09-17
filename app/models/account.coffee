@@ -5,6 +5,7 @@
 alias = Ember.computed.alias
 
 Account = DS.Model.extend
+  email: DS.attr "string"
   companyName: DS.attr "string"
   accessKeyId: DS.attr "string"
   secretAccessKey: DS.attr "string"

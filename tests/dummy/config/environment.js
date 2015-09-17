@@ -5,6 +5,8 @@ module.exports = function(environment) {
     modulePrefix: 'dummy',
     environment: environment,
     baseURL: '/',
+    host: "http://localhost:4000",
+    namespace: "apiv3",
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
