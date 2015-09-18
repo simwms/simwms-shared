@@ -1,0 +1,13 @@
+{{#if isBusy}}
+  <h3>Busy!</h3>
+{{else}}
+  <button id="atomic" {{action "submit"}}>
+    Click me
+  </button>
+{{/if}}
+
+{{#if submitClicked}}
+  Clicked!
+{{else}}
+  Not clicked!
+{{/if}}

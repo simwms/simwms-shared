@@ -1,10 +1,13 @@
 `import Ember from 'ember'`
 `import { module, test } from 'qunit'`
 `import startApp from '../../tests/helpers/start-app'`
+`import andAfterward from '../../tests/helpers/and-afterward'`
 `import Fixtures from '../helpers/fixtures'`
 
 module 'Acceptance: CurrentUser',
   beforeEach: ->
+    Cookies.remove "employeeEmail"
+    Cookies.remove "rememberToken"
     @application = startApp()
     ###
     Don't return anything, because QUnit looks for a .then
@@ -17,6 +20,8 @@ module 'Acceptance: CurrentUser',
 
   afterEach: ->
     Ember.run @application, 'destroy'
+    Cookies.remove "employeeEmail"
+    Cookies.remove "rememberToken"
 
 test 'properly working', (assert) ->
   visit '/'
@@ -41,14 +46,19 @@ test 'properly working', (assert) ->
 test "screwing up blank", (assert) ->
   visit "/"
   @currentUser.configure({})
+  assert.equal @currentUser.get("rememberToken"), null, "it should not have a token"
+  assert.equal @currentUser.get("employeeEmail"), null, "it should not have an email"
+  assert.equal @currentUser.get("hasErrors"), true, "it should have errors"
   andThen =>
     @currentUser.setup(@store)
     .then (session) ->
-      assert.ok session.get("hasErrors")
+      assert.ok session.get("hasErrors"), "it should errors after trying to setup"
       errors = session.get("errors")
       assert.deepEqual errors.get("token"), ["cannot be blank"]
       assert.deepEqual errors.get("email"), ["cannot be blank"]
 
+test "testing wrong email", (assert) ->
+  visit "/"
   andThen =>
     @currentUser.configure
       token: "666hailsatan"

@@ -35,8 +35,8 @@ UserSession = Ember.Service.extend
     @set "rememberToken", Cookies.get("rememberToken")
     @checkForErrors()
   configure: ({email, token}) ->
-    @set "employeeEmail", email unless isBlank(email)
-    @set "rememberToken", token unless isBlank(token)
+    @set("employeeEmail", email) if Ember.isPresent(email)
+    @set("rememberToken", token) if Ember.isPresent(token)
     @checkForErrors()
   setup: (store) ->
     return @get("p") if @checkForErrors()
