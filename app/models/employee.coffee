@@ -1,7 +1,7 @@
 `import DS from 'ember-data'`
 
 Employee = DS.Model.extend
-  fullName: DS.attr "string"
+  fullName: DS.attr "string", defaultValue: "no name"
   title: DS.attr "string"
   tileType: DS.attr "string"
   arrivedAt: DS.attr "date"
@@ -11,6 +11,7 @@ Employee = DS.Model.extend
   createdAt: DS.attr "date"
   updatedAt: DS.attr "date"
   role: DS.attr "string", defaultValue: "none"
+  picture: DS.attr "string"
 
   tile: DS.belongsTo "tile"
 
