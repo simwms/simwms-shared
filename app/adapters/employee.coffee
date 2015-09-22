@@ -5,10 +5,10 @@
 volatile = ->
   Ember.computed(arguments...).volatile()
 
-AccountAdapter = DS.ActiveModelAdapter.extend
+EmployeeAdapter = DS.ActiveModelAdapter.extend
   host: ENV.host
   namespace: ENV.namespace
   headers: volatile "currentUser.rememberToken", ->
     "simwms-account-session": @get("currentUser.rememberToken")
 
-`export default AccountAdapter`
+`export default EmployeeAdapter`

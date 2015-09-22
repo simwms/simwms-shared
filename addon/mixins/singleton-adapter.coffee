@@ -2,8 +2,8 @@
 
 SingletonAdapterMixin = Ember.Mixin.create
   pathForType: (modelName) ->
-    camelized = Ember.String.camelize modelName
-    Ember.String.singularize camelized
+    underscored = Ember.String.underscore modelName
+    Ember.String.singularize underscored
 
   urlForFindRecord: (id, modelName, snapshot) ->
     @_buildURL modelName

@@ -1,5 +1,6 @@
 import UserSession from './services/user-session';
 import Singleton from './mixins/singleton-adapter';
 import Atomic from './mixins/atomic';
-export {UserSession, Singleton, Atomic};
+import validateAccount from './validators/account';
+export {UserSession, Singleton, Atomic, validateAccount};
 export default UserSession;

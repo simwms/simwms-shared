@@ -41,16 +41,18 @@ UserSession = Ember.Service.extend
   setup: (store) ->
     return @get("p") if @checkForErrors()
 
-    store.find "employee", @get("employeeEmail")
-    .then (employee) =>
+    Ember.RSVP.hash
+      employee: store.find "employee", @get("employeeEmail")
+      account: store.find "account", ""
+      accountMeta: store.find "accountMetum", ""
+    .then ({employee, account, accountMeta}) =>
       @set "employee", employee
       Cookies.set("employeeEmail", employee.get("email"))
-      employee.get("account")
-    .then (account) =>
       @set "account", account
       Cookies.set("rememberToken", @get("rememberToken"))
+      @set "meta", accountMeta
       @
-    .catch ({errors}) =>
+    .catch (errors) =>
       @setError "email", "Unrecognized employee email"
       @setError "token", "Unknown token"
       Cookies.remove "employeeEmail"

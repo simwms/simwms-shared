@@ -34,14 +34,23 @@ test 'properly working', (assert) ->
   andThen => 
     @currentUser.setup(@store)
     .then (session) ->
-      assert.ok session
-      assert.ok session.get("isLoggedIn")
-      assert.ok session.get("employee")
-      assert.equal session.get("employee.email"), Fixtures.email
-      assert.ok session.get("account")
-      assert.equal session.get("account.email"), Fixtures.email
-      assert.equal Cookies.get("employeeEmail"), Fixtures.email
-      assert.equal Cookies.get("rememberToken"), Fixtures.token
+      assert.ok session, "session should be present"
+      assert.ok session.get("isLoggedIn"), "we should be logged in"
+      assert.ok session.get("employee"), "the employee model should be present"
+      assert.equal session.get("employee.email"), Fixtures.email, "the proper email should be present"
+      assert.ok session.get("account"), "the session should have the proper account"
+      assert.equal session.get("account.email"), Fixtures.email, "email should match"
+      assert.equal Cookies.get("employeeEmail"), Fixtures.email, "email should match"
+      assert.equal Cookies.get("rememberToken"), Fixtures.token, "remember token should match"
+
+      session.get("account.servicePlan")
+    .then (servicePlan) ->
+      assert.ok servicePlan, "the service plan should be there"
+      assert.equal servicePlan.get("simwmsName"), "test", "it should be the correct plan"
+      assert.equal servicePlan.get("docks"), Infinity
+      assert.equal servicePlan.get("warehouses"), Infinity
+      assert.equal servicePlan.get("employees"), Infinity
+      assert.equal servicePlan.get("scales"), Infinity
 
 test "screwing up blank", (assert) ->
   visit "/"

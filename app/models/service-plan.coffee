@@ -4,6 +4,8 @@
 c = Ember.computed
 
 ServicePlan = DS.Model.extend
+  account: DS.belongsTo "account", async: false
+  simwmsName: DS.attr "string"
   permalink: DS.attr "string"
   version: DS.attr "string"
   presentation: DS.attr "string"
@@ -12,7 +14,7 @@ ServicePlan = DS.Model.extend
   docks: DS.attr "number", defaultValue: Infinity
   scales: DS.attr "number", defaultValue: Infinity
   warehouses: DS.attr "number", defaultValue: Infinity
-  users: DS.attr "number", defaultValue: Infinity
+  employees: DS.attr "number", defaultValue: Infinity
   availability: DS.attr "number", defaultValue: 24
   appointments: DS.attr "number", defaultValue: Infinity
   deprecatedAt: DS.attr "date"
