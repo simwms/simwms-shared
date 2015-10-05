@@ -41,10 +41,12 @@ UserSession = Ember.Service.extend
   setup: (store) ->
     return @get("p") if @checkForErrors()
 
-    Ember.RSVP.hash
-      employee: store.find "employee", @get("employeeEmail")
-      account: store.find "account", ""
-      accountMeta: store.find "accountMetum", ""
+    store.find "user", @get("employeeEmail")
+    .then (user) =>
+      Ember.RSVP.hash
+        employee: user.get("employee")
+        account: user.get("account")
+        accountMeta: store.find "accountMetum", ""
     .then ({employee, account, accountMeta}) =>
       @set "employee", employee
       Cookies.set("employeeEmail", employee.get("email"))
