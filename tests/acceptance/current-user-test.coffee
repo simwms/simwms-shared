@@ -36,6 +36,7 @@ test 'properly working', (assert) ->
     .then (session) ->
       assert.ok session, "session should be present"
       assert.ok session.get("isLoggedIn"), "we should be logged in"
+      assert.ok session.get("permalink"), "we should have permalink"
       assert.ok session.get("employee"), "the employee model should be present"
       assert.equal session.get("employee.email"), Fixtures.email, "the proper email should be present"
       assert.ok session.get("account"), "the session should have the proper account"

@@ -19,6 +19,7 @@ Errors = Ember.Object.extend
 UserSession = Ember.Service.extend
   isLoggedIn: ifPresent "account.id"
   namespace: alias "account.namespace"
+  permalink: alias "account.permalink"
   host: alias "account.host"
   simwmsAccountSession: alias "rememberToken"
   hasErrors: alias "errors.hasErrors"
