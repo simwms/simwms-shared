@@ -7,8 +7,6 @@ volatile = ->
 
 UserAdapter = DS.ActiveModelAdapter.extend
   host: ENV.host
-  namespace: ENV.namespace
-  headers: volatile "currentUser.rememberToken", ->
-    "simwms-account-session": @get("currentUser.rememberToken")
+  namespace: ENV.apiNamespace
 
 `export default UserAdapter`

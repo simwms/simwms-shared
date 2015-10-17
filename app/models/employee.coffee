@@ -17,7 +17,7 @@ Employee = DS.Model.extend
   tile: DS.belongsTo "tile"
 
   account: DS.belongsTo "account", async: true
-
+  
   watchTileType: Ember.observer "tile.tileType", ->
     @set "tileType", @get("tile.tileType")
 

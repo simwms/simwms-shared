@@ -1,7 +1,8 @@
 `import DS from 'ember-data'`
 
 User = DS.Model.extend
-  account: DS.belongsTo "account", async: true
-  employee: DS.belongsTo "employee", async: true
+  email: DS.attr "string"
+  username: DS.attr "string"
+  password: DS.attr "string"
 
 `export default User`

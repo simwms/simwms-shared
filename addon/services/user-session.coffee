@@ -1,68 +1,121 @@
 `import Ember from 'ember'`
 
-alias = Ember.computed.alias
-ifPresent = Ember.computed.and
-ifAny = Ember.computed.or
+{computed} = Ember
+{alias, notEmpty, equal} = computed
+ifPresent = computed.and
+ifAny = computed.or
 isBlank = Ember.isBlank
-notEmpty = Ember.computed.notEmpty
+
+volatile = ->
+  Ember.computed(arguments...).volatile()
 
 Errors = Ember.Object.extend
   hasErrors: ifAny "hasEmailErrors", "hasTokenErrors"
-  hasTokenErrors: notEmpty "token"
+  hasTokenErrors: notEmpty "password"
   hasEmailErrors: notEmpty "email"
   clear: ->
-    @set "token", Ember.A()
+    @set "password", Ember.A()
     @set "email", Ember.A()
   addError: (key, msg) ->
     @getWithDefault(key, Ember.A()).pushObject msg
 
+cookieSetter = (key, value) -> 
+  if value? then Cookies.set(key, value) else Cookies.remove(key)
+
+SessionStates = ["uncertain", "login-success", "login-failed", "logout-success"]
 UserSession = Ember.Service.extend
-  isLoggedIn: ifPresent "account.id"
+  state: "uncertain"
+  rank: alias "employee.role"
+  isLoggedIn: equal "state", "login-success"
+  accountLoggedIn: ifPresent "account.permalink"
   namespace: alias "account.namespace"
   permalink: alias "account.permalink"
   host: alias "account.host"
-  simwmsAccountSession: alias "rememberToken"
   hasErrors: alias "errors.hasErrors"
   errors: Errors.create()
   p: Ember.computed -> new Ember.RSVP.Promise (r) => r @
-  checkForErrors: ->
-    @errors.clear()
-    @setError "token", "cannot be blank" if isBlank(@get "rememberToken")
-    @setError "email", "cannot be blank" if isBlank(@get "employeeEmail")
-    @get "hasErrors"
-  init: ->
-    @_super arguments...
-    @set "employeeEmail", Cookies.get("employeeEmail")
-    @set "rememberToken", Cookies.get("rememberToken")
-    @checkForErrors()
-  configure: ({email, token}) ->
-    @set("employeeEmail", email) if Ember.isPresent(email)
-    @set("rememberToken", token) if Ember.isPresent(token)
-    @checkForErrors()
-  setup: (store) ->
-    return @get("p") if @checkForErrors()
+  simwmsAccountSession: volatile
+    set: cookieSetter
+    get: ->
+      Cookies.get("simwmsAccountSession")
 
-    store.find "user", @get("employeeEmail")
-    .then (user) =>
-      Ember.RSVP.hash
-        employee: user.get("employee")
-        account: user.get("account")
-        accountMeta: store.find "accountMetum", ""
-    .then ({employee, account, accountMeta}) =>
-      @set "employee", employee
-      Cookies.set("employeeEmail", employee.get("email"))
-      @set "account", account
-      Cookies.set("rememberToken", @get("rememberToken"))
-      @set "meta", accountMeta
-      @
+  simwmsUserSession: volatile
+    set: cookieSetter
+    get: ->
+      Cookies.get("simwmsUserSession")
+  
+  logout: ->
+    return @get("p") if Ember.isBlank @get "session"
+    @get("session")
+    .destroyRecord()
+    .then => 
+      @set "simwmsUserSession", null
+      @set "state", "logout-success"
+      @set "session", null
+    .finally => @
+  login: ({email, password}) ->
+    return @get("p") if @get "isLoggedIn"
+    return @get("p") if @checkForErrors({email, password})
+    @store.createRecord "session", {email, password}
+    .save()
+    .then (session) =>
+      @set "session", session
+      @set "simwmsUserSession", session.get("rememberToken")
+      @set "state", "login-success"
     .catch (errors) =>
-      @setError "email", "Unrecognized employee email"
-      @setError "token", "Unknown token"
-      Cookies.remove "employeeEmail"
-      Cookies.remove "rememberToken"
-      @
+      @setErrors errors
+      @set "simwmsUserSession", null
+      @set "state", "login-failed"
+    .finally => @
+  cookieLogin: ->
+    @store.find "session", "cookie-session"
+    .then (session) =>
+      @set "session", session
+      @set "state", "login-success"
+    .catch =>
+      @set "simwmsUserSession", null
+      @set "state", "login-failed"
+    .finally => @
+  
+  accountLogout: ->
+    @set "simwmsAccountSession", null
+    @set "meta", null
+    @set "account", null
+    @set "servicePlan", null
+    @set "employee", null
+    @
+  accountLogin: (account) ->
+    return @get("p") unless @get "isLoggedIn"
+    return @get("p") if @get "accountLoggedIn"
+    accountToken = account.get("permalink") ? @get("simwmsAccountSession")
+    @store.find "account-detail", accountToken
+    .then (detail) =>
+      @set "simwmsAccountSession", accountToken
+      @set "meta", detail
+      Ember.RSVP.hash
+        account: detail.get("account")
+        plan: detail.get("servicePlan")
+        employee: detail.get("employee")
+    .then ({account, plan, employee}) =>
+      @set "account", account
+      @set "servicePlan", plan
+      @set "employee", employee
+    .catch (errors) ->
+      @set "simwmsAccountSession", null
+    .finally => @
 
   setError: (key, msg) ->
     @errors.addError key, msg
+
+  setErrors: (email: emailErr, password: passErr) ->
+    @errors.clear()
+    @errors.addError "email", emailErr if Ember.isPresent(emailErr)
+    @errors.addError "password", passErr if Ember.isPresent(passErr)
+
+  checkForErrors: ({email, password})->
+    @errors.clear()
+    @setError "email", "cannot be blank" if isBlank(email)
+    @setError "password", "cannot be blank" if isBlank(password)
+    @get "hasErrors"
 
 `export default UserSession`

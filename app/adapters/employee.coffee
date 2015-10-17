@@ -1,14 +1,17 @@
 `import Ember from 'ember'`
 `import DS from 'ember-data'`
 `import ENV from '../config/environment'`
+`import {SimwmsHeaders} from 'simwms-shared'`
 
-volatile = ->
-  Ember.computed(arguments...).volatile()
+{computed} = Ember
 
-EmployeeAdapter = DS.ActiveModelAdapter.extend
+EmployeeAdapter = DS.ActiveModelAdapter.extend SimwmsHeaders,
   host: ENV.host
-  namespace: ENV.namespace
-  headers: volatile "currentUser.rememberToken", ->
-    "simwms-account-session": @get("currentUser.rememberToken")
+  namespace: computed "currentUser.rank",
+    get: ->
+      switch @currentUser.get("rank")
+        when "admin_manager", "admin", "manager" then ENV.apiaNamespace
+        when "scalemaster","dockworker","logistics","inventory","none" then ENV.apizNamespace
+        else ENV.apixNamespace
 
 `export default EmployeeAdapter`

@@ -6,7 +6,9 @@ module.exports = function(environment) {
     environment: environment,
     baseURL: '/',
     host: "http://localhost:4000",
-    namespace: "apiv3",
+    apiNamespace: "api",
+    apixNamespace: "apix",
+    apizNamespace: "apiz",
     locationType: 'auto',
     EmberENV: {
       FEATURES: {

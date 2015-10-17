@@ -44,9 +44,9 @@ test 'validateAccount', (assert) ->
 
   validateAccount account
   .catch (errors) ->
-    assert.deepEqual errors.warehouses, ["must be lessThan 2"]
-    assert.deepEqual errors.docks, ["must be lessThan 2"]
-    assert.deepEqual errors.scales, ["must be lessThan 1"]
+    assert.deepEqual errors.warehouses, ["must be lessThanEqualTo 2"]
+    assert.deepEqual errors.docks, ["must be lessThanEqualTo 2"]
+    assert.deepEqual errors.scales, ["must be lessThanEqualTo 1"]
 
 test "almost passing validation", (assert) ->
   account = Ember.Object.create
@@ -60,7 +60,7 @@ test "almost passing validation", (assert) ->
   .catch (errors) ->
     assert.notOk errors.warehouses
     assert.notOk errors.docks
-    assert.deepEqual errors.scales, ["must be lessThan 2"]
+    assert.deepEqual errors.scales, ["must be lessThanEqualTo 2"]
 
 test "passing validation", (assert) ->
   account = Ember.Object.create
@@ -75,24 +75,3 @@ test "passing validation", (assert) ->
     assert.ok account, "we should get here"
   .catch ->
     assert.ok false, "should not get here"
-
-test "account meta", (assert) ->
-  visit '/'
-  @currentUser.configure(Fixtures)
-
-  andThen =>
-    @currentUser.setup(@store)
-    .then (session) ->
-      session.get("meta")
-    .then (meta) ->
-      assert.equal meta.get("docks"), 1, "docks"
-      assert.equal meta.get("warehouses"), 1, "warehouses"
-      assert.equal meta.get("employees"), 1, "employees"
-      assert.equal meta.get("scales"), 1, "scales"
-
-      validateAccount meta
-      .then (meta) ->
-        assert.ok meta, "we should get here"
-      .catch (errors) ->
-        console.log errors
-        assert.ok false, "should not get here"
