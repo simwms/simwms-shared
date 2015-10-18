@@ -10,12 +10,14 @@ volatile = ->
   Ember.computed(arguments...).volatile()
 
 Errors = Ember.Object.extend
-  hasErrors: ifAny "hasEmailErrors", "hasTokenErrors"
-  hasTokenErrors: notEmpty "password"
+  hasErrors: ifAny "hasEmailErrors", "hasTokenErrors", "hasPasswordErrors"
+  hasTokenErrors: notEmpty "token"
+  hasPasswordErrors: notEmpty "password"
   hasEmailErrors: notEmpty "email"
   clear: ->
     @set "password", Ember.A()
     @set "email", Ember.A()
+    @set "token", Ember.a()
   addError: (key, msg) ->
     @getWithDefault(key, Ember.A()).pushObject msg
 
@@ -111,7 +113,8 @@ UserSession = Ember.Service.extend
       @set "account", account
       @set "servicePlan", plan
       @set "employee", employee
-    .catch (errors) ->
+    .catch (errors) =>
+      @setError "token", "bad token"
       @set "simwmsAccountSession", null
     .finally => @
 
