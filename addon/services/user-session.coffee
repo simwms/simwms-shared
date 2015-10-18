@@ -76,7 +76,14 @@ UserSession = Ember.Service.extend
       @set "simwmsUserSession", null
       @set "state", "login-failed"
     .finally => @
-  
+  smartLogin: ({email, accountToken, password}) ->
+    @login({email, password})
+    .then (session) =>
+      if accountToken?
+        @accountLogin accountToken
+      else
+        session
+    .finally => @
   accountLogout: ->
     @set "simwmsAccountSession", null
     @set "meta", null
@@ -87,7 +94,11 @@ UserSession = Ember.Service.extend
   accountLogin: (account) ->
     return @get("p") unless @get "isLoggedIn"
     return @get("p") if @get "accountLoggedIn"
-    accountToken = account.get("permalink") ? @get("simwmsAccountSession")
+    accountToken = switch
+      when typeof account is "string" then account
+      when Ember.isBlank(account) then @get("simwmsAccountSession")
+      when typeof account.get is "function" then account.get("permalink")
+      else throw new "I don't know how to handle #{account}"
     @store.find "account-detail", accountToken
     .then (detail) =>
       @set "simwmsAccountSession", accountToken

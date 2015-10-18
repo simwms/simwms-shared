@@ -30,6 +30,7 @@ module 'Acceptance: CurrentAccount',
 
 test 'account creation and session', (assert) ->
   visit '/'
+  accountToken = null
   andThen => 
     @store.createRecord "user", userParams
     .save()
@@ -39,8 +40,9 @@ test 'account creation and session', (assert) ->
     @store.createRecord "account", accountParams
     .save()
     .then (account) =>
+      accountToken = account.get("permalink")
       assert.ok account.id, "the account should be made"
-      assert.ok account.permalink, "the account should have its permalink"
+      assert.ok accountToken, "the account should have its permalink"
       @currentUser.accountLogin(account)
     .catch (errors) ->
       assert.deepEqual errors, {}, "we should be able to make accounts"
@@ -73,3 +75,16 @@ test 'account creation and session', (assert) ->
   andThen =>
     @currentUser.logout()
 
+  andThen =>
+    @currentUser.smartLogin
+      email: userParams.email
+      password: userParams.password
+      accountToken: accountToken
+  andThen =>
+    assert.ok @currentUser.get("isLoggedIn"), "smart login should log in user"
+    assert.ok @currentUser.get("accountLoggedIn"), "smart login should log in the account"
+    assert.equal @currentUser.get("account.permalink"), accountToken, "we should have the right account"
+    assert.equal @currentUser.get("session.email"), userParams.email, "the right employee should be logged in"
+  andThen =>
+    @currentUser.accountLogout()
+    @currentUser.logout()
