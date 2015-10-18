@@ -30,6 +30,7 @@ UserSession = Ember.Service.extend
   rank: alias "employee.role"
   isLoggedIn: equal "state", "login-success"
   accountLoggedIn: ifPresent "account.permalink"
+  username: alias "session.username"
   namespace: alias "account.namespace"
   permalink: alias "account.permalink"
   host: alias "account.host"
@@ -69,7 +70,9 @@ UserSession = Ember.Service.extend
       @set "simwmsUserSession", null
       @set "state", "login-failed"
     .finally => @
-  cookieLogin: ->
+  cookieLogin: (userToken) ->
+    if Ember.isPresent userToken
+      @set "simwmsUserSession", userToken 
     @store.find "session", "cookie-session"
     .then (session) =>
       @set "session", session
@@ -78,13 +81,12 @@ UserSession = Ember.Service.extend
       @set "simwmsUserSession", null
       @set "state", "login-failed"
     .finally => @
-  smartLogin: ({email, accountToken, password}) ->
-    @login({email, password})
-    .then (session) =>
-      if accountToken?
-        @accountLogin accountToken
-      else
-        session
+  smartLogin: ({email, accountToken, password, userToken}) ->
+    @cookieLogin(userToken)
+    .then =>
+      @login({email, password})
+    .then =>
+      @accountLogin accountToken
     .finally => @
   accountLogout: ->
     @set "simwmsAccountSession", null
