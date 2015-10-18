@@ -17,7 +17,7 @@ Errors = Ember.Object.extend
   clear: ->
     @set "password", Ember.A()
     @set "email", Ember.A()
-    @set "token", Ember.a()
+    @set "token", Ember.A()
   addError: (key, msg) ->
     @getWithDefault(key, Ember.A()).pushObject msg
 
