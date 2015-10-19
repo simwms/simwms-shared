@@ -103,6 +103,7 @@ UserSession = Ember.Service.extend
       when Ember.isBlank(account) then @get("simwmsAccountSession")
       when typeof account.get is "function" then account.get("permalink")
       else throw new "I don't know how to handle #{account}"
+    return @get("p") if Ember.isBlank(accountToken)
     @store.find "account-detail", accountToken
     .then (detail) =>
       @set "simwmsAccountSession", accountToken

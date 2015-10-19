@@ -1,6 +1,6 @@
 initialize = (instance) ->
   session = instance.container.lookup("service:user-session")
-  session.cookieLogin()
+  session.smartLogin()
 
 UserSessionInitializer =
   name: 'user-session'
