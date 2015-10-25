@@ -94,6 +94,7 @@ UserSession = Ember.Service.extend
     @set "account", null
     @set "servicePlan", null
     @set "employee", null
+    @set "paymentSubscription", null
     @
   accountLogin: (account) ->
     return @get("p") unless @get "isLoggedIn"
@@ -112,7 +113,7 @@ UserSession = Ember.Service.extend
         account: detail.get("account")
         plan: detail.get("servicePlan")
         employee: detail.get("employee")
-    .then ({account, plan, employee}) =>
+    .then ({account, plan, employee, sub}) =>
       @set "account", account
       @set "servicePlan", plan
       @set "employee", employee
