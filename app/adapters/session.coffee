@@ -1,11 +1,11 @@
 `import Ember from 'ember'`
-`import DS from 'ember-data'`
+`import ActiveModelAdapter from 'active-model-adapter'`
 `import {SimwmsHeaders} from 'simwms-shared'`
 `import ENV from '../config/environment'`
 
 {computed} = Ember
 
-SessionAdapter = DS.ActiveModelAdapter.extend SimwmsHeaders,
+SessionAdapter = ActiveModelAdapter.extend SimwmsHeaders,
   host: ENV.host
   namespace: computed "currentUser.state", 
     get: -> 

@@ -1,11 +1,11 @@
 `import Ember from 'ember'`
-`import DS from 'ember-data'`
+`import ActiveModelAdapter from 'active-model-adapter'`
 `import ENV from '../config/environment'`
 `import {SimwmsHeaders} from 'simwms-shared'`
 
 {computed} = Ember
 
-EmployeeAdapter = DS.ActiveModelAdapter.extend SimwmsHeaders,
+EmployeeAdapter = ActiveModelAdapter.extend SimwmsHeaders,
   host: ENV.host
   namespace: computed "currentUser.rank",
     get: ->
