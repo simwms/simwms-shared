@@ -60,6 +60,7 @@ UserSession = Ember.Service.extend
       @set "state", "login-failed"
     .finally => @
   cookieLogin: (userToken) ->
+    return @get("p") if @get "isLoggedIn"
     if Ember.isPresent userToken
       @set "simwmsUserSession", userToken 
     @store.find "session", "cookie-session"
