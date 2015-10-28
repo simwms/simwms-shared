@@ -39,6 +39,24 @@ test 'registration and session', (assert) ->
     .catch (errors) =>
       assert.deepEqual errors, {}, "should not get here"
   andThen =>
+    @currentUser.clearErrors()
+    @currentUser.login
+      email: userParams.email
+      password: "wrong-pass"
+    .catch (errors) ->
+      assert.ok errors, "we should have not be logged in given the wrong password"
+    .finally =>
+      errors = @currentUser.get("errors")
+      assert.notOk @currentUser.get("isLoggedIn"), "we should not be logged in with the wrong password"
+      assert.ok errors, "we should have the errors object"
+      expected =
+        password: ["wrong password"]
+        email: []
+        token: []
+        system: []
+      assert.deepEqual errors.get("core"), expected, "we should have the password error"
+  andThen =>
+    @currentUser.clearErrors()
     @currentUser.login userParams
     .then (session) ->
       assert.notOk session.get("hasErrors"), "we should not have errors"

@@ -1,4 +1,5 @@
 `import Ember from 'ember'`
+`import Errors from '../utils/errors'`
 
 {computed} = Ember
 {alias, notEmpty, equal} = computed
@@ -8,18 +9,6 @@ isBlank = Ember.isBlank
 
 volatile = ->
   Ember.computed(arguments...).volatile()
-
-Errors = Ember.Object.extend
-  hasErrors: ifAny "hasEmailErrors", "hasTokenErrors", "hasPasswordErrors"
-  hasTokenErrors: notEmpty "token"
-  hasPasswordErrors: notEmpty "password"
-  hasEmailErrors: notEmpty "email"
-  clear: ->
-    @set "password", Ember.A()
-    @set "email", Ember.A()
-    @set "token", Ember.A()
-  addError: (key, msg) ->
-    @getWithDefault(key, Ember.A()).pushObject msg
 
 cookieSetter = (key, value) -> 
   if value? then Cookies.set(key, value) else Cookies.remove(key)
@@ -66,7 +55,7 @@ UserSession = Ember.Service.extend
       @set "simwmsUserSession", session.get("rememberToken")
       @set "state", "login-success"
     .catch (errors) =>
-      @setErrors errors
+      @errors.addErrors errors
       @set "simwmsUserSession", null
       @set "state", "login-failed"
     .finally => @
@@ -77,11 +66,11 @@ UserSession = Ember.Service.extend
     .then (session) =>
       @set "session", session
       @set "state", "login-success"
-    .catch =>
+    .catch (errors) =>
       @set "simwmsUserSession", null
       @set "state", "login-failed"
     .finally => @
-  smartLogin: ({email, accountToken, password, userToken}) ->
+  smartLogin: ({email, accountToken, password, userToken}={}) ->
     @cookieLogin(userToken)
     .then =>
       @login({email, password})
@@ -118,22 +107,24 @@ UserSession = Ember.Service.extend
       @set "servicePlan", plan
       @set "employee", employee
     .catch (errors) =>
-      @setError "token", "bad token"
+      @errors.addError 
+        key: "token"
+        msg: "bad token"
       @set "simwmsAccountSession", null
     .finally => @
 
-  setError: (key, msg) ->
-    @errors.addError key, msg
-
-  setErrors: (email: emailErr, password: passErr) ->
+  clearErrors: ->
     @errors.clear()
-    @errors.addError "email", emailErr if Ember.isPresent(emailErr)
-    @errors.addError "password", passErr if Ember.isPresent(passErr)
 
   checkForErrors: ({email, password})->
-    @errors.clear()
-    @setError "email", "cannot be blank" if isBlank(email)
-    @setError "password", "cannot be blank" if isBlank(password)
+    if isBlank(email)
+      @errors.addError
+        key: "email"
+        msg: "cannot be blank"
+    if isBlank(password)
+      @errors.addError 
+        key: "password"
+        msg: "cannot be blank"
     @get "hasErrors"
 
 `export default UserSession`

@@ -1,5 +1,7 @@
 `import Ember from 'ember'`
 
-AppRoute = Ember.Route.extend()
+AppRoute = Ember.Route.extend
+  model: ->
+    @currentUser.cookieLogin()
 
 `export default AppRoute`
