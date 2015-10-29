@@ -7,14 +7,16 @@
 
 SessionAdapter = ActiveModelAdapter.extend SimwmsHeaders,
   host: ENV.host
-  namespace: computed "currentUser.state", 
-    get: -> 
-      switch @get "currentUser.state"
-        when "uncertain" then ENV.apixNamespace
-        when "login-success" then ENV.apixNamespace
-        when "login-failed" then ENV.apiNamespace
-        when "logout-success" then ENV.apiNamespace
-        else throw "Unknown state: #{@get "currentUser.state"}"
+  apixNamespace: ENV.apixNamespace
+  apiNamespace: ENV.apiNamespace
   
+  urlForFindRecord: (id, modelName, snapshot) ->
+    [@get("host"), @get("apixNamespace"), "session"].join("/")
 
+  urlForCreateRecord: (modelName, snapshot) ->
+    [@get("host"), @get("apiNamespace"), "sessions"].join("/")
+
+  urlForDeleteRecord: (id, modelName, snapshot) ->
+    [@get("host"), @get("apixNamespace"), "session"].join("/")
+    
 `export default SessionAdapter`

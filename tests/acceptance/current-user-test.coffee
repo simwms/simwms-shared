@@ -76,3 +76,17 @@ test 'registration and session', (assert) ->
         assert.notOk session.get("isLoggedIn"), "we should be logged out"
       .catch (errors) ->
         assert.notOk true, "logging out should not cause trouble"
+  andThen =>
+    @currentUser.clearErrors()
+    @currentUser.login userParams
+    .then (session) ->
+      assert.notOk session.get("hasErrors"), "repeated login should still produce no errors"
+      assert.ok session.get("isLoggedIn"), "repeated login should work properly"
+    .then =>
+      @store.findAll "account"
+    .then =>
+      assert.ok true, "finding the accounts should be ok"
+    .catch =>
+      assert.ok true, "finding the account when logged in should not fail"
+    .finally =>
+      @currentUser.logout()

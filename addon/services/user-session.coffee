@@ -38,9 +38,10 @@ UserSession = Ember.Service.extend
   
   logout: ->
     return @get("p") if Ember.isBlank @get "session"
+    @accountLogout()
     @get("session")
     .destroyRecord()
-    .then => 
+    .then =>
       @set "simwmsUserSession", null
       @set "state", "logout-success"
       @set "session", null
@@ -91,7 +92,7 @@ UserSession = Ember.Service.extend
     return @get("p") if @get "accountLoggedIn"
     accountToken = switch
       when typeof account is "string" then account
-      when Ember.isBlank(account) then @get("simwmsAccountSession")
+      when isBlank(account) then @get("simwmsAccountSession")
       when typeof account.get is "function" then account.get("permalink")
       else throw new "I don't know how to handle #{account}"
     return @get("p") if Ember.isBlank(accountToken)
