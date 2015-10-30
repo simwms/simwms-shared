@@ -6,6 +6,7 @@ alias = Ember.computed.alias
 
 Account = DS.Model.extend
   permalink: DS.attr "string"
+  username: DS.attr "string"
   email: DS.attr "string"
   companyName: DS.attr "string"
   accessKeyId: DS.attr "string"
@@ -16,7 +17,6 @@ Account = DS.Model.extend
   roxieKey: DS.attr "string"
   uiuxHost: DS.attr "string", defaultValue: ENV.uiuxHost
   configHost: DS.attr "string", defaultValue: ENV.configHost
-  user: DS.belongsTo "user", async: true
   insertedAt: DS.attr "date"
   status: DS.attr "string", defaultValue: "ok"
   region: alias "timezone"
