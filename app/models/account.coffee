@@ -21,6 +21,7 @@ Account = DS.Model.extend
   status: DS.attr "string", defaultValue: "ok"
   region: alias "timezone"
   servicePlan: DS.belongsTo "servicePlan", async: true
+  user: DS.belongsTo "user", async: true
   isProperlySetup: DS.attr "boolean"
   simwmsAccountKey: DS.attr "string"
 
