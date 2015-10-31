@@ -18,6 +18,7 @@ Account = DS.Model.extend
   uiuxHost: DS.attr "string", defaultValue: ENV.uiuxHost
   configHost: DS.attr "string", defaultValue: ENV.configHost
   insertedAt: DS.attr "date"
+  deletedAt: DS.attr "date"
   status: DS.attr "string", defaultValue: "ok"
   region: alias "timezone"
   servicePlan: DS.belongsTo "servicePlan", async: true
