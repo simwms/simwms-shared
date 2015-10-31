@@ -17,8 +17,8 @@ Account = DS.Model.extend
   roxieKey: DS.attr "string"
   uiuxHost: DS.attr "string", defaultValue: ENV.uiuxHost
   configHost: DS.attr "string", defaultValue: ENV.configHost
-  insertedAt: DS.attr "date"
-  deletedAt: DS.attr "date"
+  insertedAt: DS.attr "moment"
+  deletedAt: DS.attr "moment"
   status: DS.attr "string", defaultValue: "ok"
   region: alias "timezone"
   servicePlan: DS.belongsTo "servicePlan", async: true

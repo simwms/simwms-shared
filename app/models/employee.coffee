@@ -9,10 +9,10 @@ Employee = DS.Model.extend
   fullName: DS.attr "string", defaultValue: "no name"
   
   tileType: DS.attr "string"
-  arrivedAt: DS.attr "date"
-  leftWorkAt: DS.attr "date"
-  createdAt: DS.attr "date"
-  updatedAt: DS.attr "date"
+  arrivedAt: DS.attr "moment"
+  leftWorkAt: DS.attr "moment"
+  createdAt: DS.attr "moment"
+  updatedAt: DS.attr "moment"
 
   tile: DS.belongsTo "tile"
 

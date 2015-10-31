@@ -17,7 +17,7 @@ ServicePlan = DS.Model.extend
   employees: DS.attr "number", defaultValue: Infinity
   availability: DS.attr "number", defaultValue: 24
   appointments: DS.attr "number", defaultValue: Infinity
-  deprecatedAt: DS.attr "date"
+  deprecatedAt: DS.attr "moment"
 
   pricePresentation: c "monthlyPrice", ->
     $p = @get("monthlyPrice")
