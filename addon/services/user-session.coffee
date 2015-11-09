@@ -1,31 +1,28 @@
 `import Ember from 'ember'`
 `import Errors from '../utils/errors'`
 
-{computed} = Ember
-{alias, notEmpty, equal} = computed
-ifPresent = computed.and
-ifAny = computed.or
-isBlank = Ember.isBlank
+{computed, Service, RSVP, isBlank, isPresent} = Ember
+{alias, notEmpty, equal, and: present, or: ifAny} = computed
 
 volatile = ->
-  Ember.computed(arguments...).volatile()
+  computed(arguments...).volatile()
 
 cookieSetter = (key, value) -> 
   if value? then Cookies.set(key, value) else Cookies.remove(key)
 
 SessionStates = ["uncertain", "login-success", "login-failed", "logout-success"]
-UserSession = Ember.Service.extend
+UserSession = Service.extend
   state: "uncertain"
   rank: alias "employee.role"
   isLoggedIn: equal "state", "login-success"
-  accountLoggedIn: ifPresent "account.permalink"
+  accountLoggedIn: present "account.permalink"
   username: alias "session.username"
   namespace: alias "account.namespace"
   permalink: alias "account.permalink"
   host: alias "account.host"
   hasErrors: alias "errors.hasErrors"
   errors: Errors.create()
-  p: Ember.computed -> new Ember.RSVP.Promise (r) => r @
+  p: computed -> RSVP.Promise.resolve @
   simwmsAccountSession: volatile
     set: cookieSetter
     get: ->
@@ -37,7 +34,7 @@ UserSession = Ember.Service.extend
       Cookies.get("simwmsUserSession")
   
   logout: ->
-    return @get("p") if Ember.isBlank @get "session"
+    return @get("p") if isBlank @get "session"
     @accountLogout()
     @get("session")
     .destroyRecord()
@@ -62,7 +59,7 @@ UserSession = Ember.Service.extend
     .finally => @
   cookieLogin: (userToken) ->
     return @get("p") if @get "isLoggedIn"
-    if Ember.isPresent userToken
+    if isPresent userToken
       @set "simwmsUserSession", userToken 
     @store.find "session", "cookie-session"
     .then (session) =>
@@ -95,12 +92,12 @@ UserSession = Ember.Service.extend
       when isBlank(account) then @get("simwmsAccountSession")
       when typeof account.get is "function" then account.get("permalink")
       else throw new "I don't know how to handle #{account}"
-    return @get("p") if Ember.isBlank(accountToken)
+    return @get("p") if isBlank(accountToken)
     @store.find "account-detail", accountToken
     .then (detail) =>
       @set "simwmsAccountSession", accountToken
       @set "meta", detail
-      Ember.RSVP.hash
+      RSVP.hash
         account: detail.get("account")
         plan: detail.get("servicePlan")
         employee: detail.get("employee")
@@ -109,6 +106,8 @@ UserSession = Ember.Service.extend
       @set "servicePlan", plan
       @set "employee", employee
     .catch (errors) =>
+      {errors: es} = errors
+      throw errors if isBlank es
       @errors.addError 
         key: "token"
         msg: "bad token"
