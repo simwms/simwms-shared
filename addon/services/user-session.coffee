@@ -8,7 +8,7 @@ volatile = ->
   computed(arguments...).volatile()
 
 cookieSetter = (key, value) -> 
-  if value? then Cookies.set(key, value) else Cookies.remove(key)
+  if value? then Cookies.set(key, value, expires: 365) else Cookies.remove(key)
 
 SessionStates = ["uncertain", "login-success", "login-failed", "logout-success"]
 UserSession = Service.extend
