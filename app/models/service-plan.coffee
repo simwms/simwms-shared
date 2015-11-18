@@ -1,6 +1,6 @@
 `import Ember from 'ember'`
 `import DS from 'ember-data'`
-
+`import {Money} from 'simwms-shared'`
 c = Ember.computed
 
 ServicePlan = DS.Model.extend
@@ -20,7 +20,7 @@ ServicePlan = DS.Model.extend
   deprecatedAt: DS.attr "moment"
 
   pricePresentation: c "monthlyPrice", ->
-    $p = @get("monthlyPrice")
+    $p = Money.fromCents @get("monthlyPrice")
     if $p > 0 then "$#{$p} / month" else "free"
 
   isDeprecated: c.and "deprecatedAt"
