@@ -29,5 +29,8 @@ test 'visiting /fixture-smart-login', (assert) ->
     .then =>
       assert.ok @currentUser.get("isLoggedIn"), "we should be logged into the user"
       assert.ok @currentUser.get("accountLoggedIn"), "we should login onto the fixture account"
+      meta = @currentUser.get("meta")
+      assert.notEqual null, false, "what"
+      assert.equal meta.get("requiresUpgrade"), false, "upgrade requirement should work"
     .finally =>
       @currentUser.logout()
