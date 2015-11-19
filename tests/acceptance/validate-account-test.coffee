@@ -44,9 +44,9 @@ test 'validateAccount', (assert) ->
 
   validateAccount account
   .catch (errors) ->
-    assert.deepEqual errors.warehouses, ["must be lessThanEqualTo 2"]
-    assert.deepEqual errors.docks, ["must be lessThanEqualTo 2"]
-    assert.deepEqual errors.scales, ["must be lessThanEqualTo 1"]
+    assert.deepEqual errors.warehouses, ["must be lessThan 2"]
+    assert.deepEqual errors.docks, ["must be lessThan 2"]
+    assert.deepEqual errors.scales, ["must be lessThan 1"]
 
 test "almost passing validation", (assert) ->
   account = Ember.Object.create
@@ -60,7 +60,7 @@ test "almost passing validation", (assert) ->
   .catch (errors) ->
     assert.notOk errors.warehouses
     assert.notOk errors.docks
-    assert.deepEqual errors.scales, ["must be lessThanEqualTo 2"]
+    assert.deepEqual errors.scales, ["must be lessThan 2"]
 
 test "passing validation", (assert) ->
   account = Ember.Object.create

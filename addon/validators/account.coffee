@@ -9,12 +9,12 @@ flf = (key) -> (meta) ->
 
 validateAccount = FunctionalValidation.create
   docks:
-    lessThanEqualTo: flf("docks")
+    lessThan: flf("docks")
   scales:
-    lessThanEqualTo: flf("scales")
+    lessThan: flf("scales")
   employees:
-    lessThanEqualTo: flf("employees")
+    lessThan: flf("employees")
   warehouses:
-    lessThanEqualTo: flf("warehouses")
+    lessThan: flf("warehouses")
 
 `export default validateAccount`
