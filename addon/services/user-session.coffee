@@ -101,10 +101,12 @@ UserSession = Service.extend
         account: detail.get("account")
         plan: detail.get("servicePlan")
         employee: detail.get("employee")
+        sub: detail.get("paymentSubscription")
     .then ({account, plan, employee, sub}) =>
       @set "account", account
       @set "servicePlan", plan
       @set "employee", employee
+      @set "paymentSubscription", sub
     .catch (errors) =>
       {errors: es} = errors
       throw errors if isBlank es
