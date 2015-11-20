@@ -1,7 +1,7 @@
 `import Ember from 'ember'`
 `import Errors from '../utils/errors'`
 
-{computed, Service, RSVP, isBlank, isPresent} = Ember
+{computed, Service, RSVP, isBlank, isPresent, Evented} = Ember
 {alias, notEmpty, equal, and: present, or: ifAny} = computed
 
 volatile = ->
@@ -11,7 +11,7 @@ cookieSetter = (key, value) ->
   if value? then Cookies.set(key, value, expires: 365) else Cookies.remove(key)
 
 SessionStates = ["uncertain", "login-success", "login-failed", "logout-success"]
-UserSession = Service.extend
+UserSession = Service.extend Evented,
   state: "uncertain"
   rank: alias "employee.role"
   isLoggedIn: equal "state", "login-success"
@@ -42,6 +42,7 @@ UserSession = Service.extend
       @set "simwmsUserSession", null
       @set "state", "logout-success"
       @set "session", null
+      @trigger "logout-user"
     .finally => @
   login: ({email, password}) ->
     return @get("p") if @get "isLoggedIn"
@@ -52,6 +53,7 @@ UserSession = Service.extend
       @set "session", session
       @set "simwmsUserSession", session.get("rememberToken")
       @set "state", "login-success"
+      @trigger "login-user"
     .catch (errors) =>
       @errors.addErrors errors
       @set "simwmsUserSession", null
@@ -65,6 +67,7 @@ UserSession = Service.extend
     .then (session) =>
       @set "session", session
       @set "state", "login-success"
+      @trigger "login-user"
     .catch (errors) =>
       @set "simwmsUserSession", null
       @set "state", "login-failed"
@@ -83,6 +86,7 @@ UserSession = Service.extend
     @set "servicePlan", null
     @set "employee", null
     @set "paymentSubscription", null
+    @trigger "logout-account"
     @
   accountLogin: (account) ->
     return @get("p") unless @get "isLoggedIn"
@@ -107,6 +111,7 @@ UserSession = Service.extend
       @set "servicePlan", plan
       @set "employee", employee
       @set "paymentSubscription", sub
+      @trigger "login-account"
     .catch (errors) =>
       {errors: es} = errors
       throw errors if isBlank es
