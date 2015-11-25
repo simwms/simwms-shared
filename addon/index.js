@@ -4,5 +4,7 @@ import Atomic from './mixins/atomic';
 import validateAccount from './validators/account';
 import SimwmsHeaders from './mixins/simwms-headers';
 import Money from './utils/money';
-export {UserSession, Singleton, Atomic, validateAccount, SimwmsHeaders, Money};
+import TileCore from './mixins/tile-core';
+import LineCore from './mixins/line-core';
+export {UserSession, Singleton, Atomic, validateAccount, SimwmsHeaders, Money, LineCore, TileCore};
 export default UserSession;
