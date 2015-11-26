@@ -1,21 +1,19 @@
 `import Ember from 'ember'`
 `import Errors from '../utils/errors'`
 
-{computed, String, Service, RSVP, isBlank, isPresent, Evented} = Ember
+{computed, Service, RSVP, isBlank, isPresent, Evented} = Ember
 {alias, notEmpty, equal, and: present, or: ifAny} = computed
 
 volatile = ->
   computed(arguments...).volatile()
 
 cookieSetter = (key, value) -> 
-  k = String.dasherize key
-  if value?
-    Cookies.set(k, value, expires: 365)
-  else 
-    Cookies.remove(k)
-
-cookieGetter = (key) ->
-  Cookies.get String.dasherize key
+  if value? 
+    Cookies.set(String.dasherize(key), value, expires: 365) 
+    Cookies.set(key, value, expires: 365) 
+  else
+    Cookies.remove String.dasherize key
+    Cookies.remove key
 
 SessionStates = ["uncertain", "login-success", "login-failed", "logout-success"]
 UserSession = Service.extend Evented,
@@ -32,11 +30,13 @@ UserSession = Service.extend Evented,
   p: computed -> RSVP.Promise.resolve @
   simwmsAccountSession: volatile
     set: cookieSetter
-    get: cookieGetter
+    get: ->
+      Cookies.get("simwmsAccountSession")
 
   simwmsUserSession: volatile
     set: cookieSetter
-    get: cookieGetter
+    get: ->
+      Cookies.get("simwmsUserSession")
   
   logout: ->
     return @get("p") if isBlank @get "session"
