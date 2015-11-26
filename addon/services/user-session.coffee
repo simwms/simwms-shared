@@ -1,7 +1,7 @@
 `import Ember from 'ember'`
 `import Errors from '../utils/errors'`
 
-{computed, Service, RSVP, isBlank, isPresent, Evented} = Ember
+{computed, Service, RSVP, isBlank, String, isPresent, Evented} = Ember
 {alias, notEmpty, equal, and: present, or: ifAny} = computed
 
 volatile = ->
