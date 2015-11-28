@@ -6,7 +6,8 @@ module.exports = {
   afterInstall: function(options) {
     return RSVP.all([
       this.addBowerPackagesToProject([{name: "js-cookie", target: "~2.0.3"}]),
-      this.addPackageToProject("active-model-adapter", "1.13.6")
+      this.addPackageToProject("active-model-adapter", "2.0.3"),
+      this.addPackageToProject("ember-moment", "4.1.0")
     ]);
   }
 };
