@@ -7,9 +7,19 @@ module.exports = function(environment) {
     baseURL: '/',
     host: "http://localhost:4000",
     apiNamespace: "api",
+    apiaNamespace: "apia",
     apixNamespace: "apix",
     apizNamespace: "apiz",
     locationType: 'auto',
+    contentSecurityPolicy: { 
+      "connect-src": "'self' ws://localhost:4000 https://*.amazonaws.com http://*.simwms.com https://*.herokuapp.com http://localhost:4000",
+      "img-src": "*",
+      "media-src": "'self' http://localhost:*",
+      "font-src": "*",
+      "style-src": "'self' 'unsafe-inline' *",
+      "script-src": "'self' https://checkout.stripe.com",
+      "frame-src": "'self' https://simwms.github.io https://checkout.stripe.com http://*.pisources.com"
+    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

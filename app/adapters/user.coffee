@@ -1,11 +1,11 @@
 `import Ember from 'ember'`
-`import ActiveModelAdapter from 'active-model-adapter'`
+`import DS from 'ember-data'`
 `import ENV from '../config/environment'`
 
 volatile = ->
   Ember.computed(arguments...).volatile()
 
-UserAdapter = ActiveModelAdapter.extend
+UserAdapter = DS.JSONAPIAdapter.extend
   host: ENV.host
   namespace: ENV.apiNamespace
 

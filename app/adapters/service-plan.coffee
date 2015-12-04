@@ -1,7 +1,7 @@
-`import ActiveModelAdapter from 'active-model-adapter'`
+`import DS from 'ember-data'`
 `import ENV from '../config/environment'`
 
-ServicePlanAdapter = ActiveModelAdapter.extend
+ServicePlanAdapter = DS.JSONAPIAdapter.extend
   host: ENV.host
   namespace: ENV.apiNamespace
 

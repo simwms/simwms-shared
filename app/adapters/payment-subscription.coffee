@@ -1,8 +1,8 @@
-`import ActiveModelAdapter from 'active-model-adapter'`
+`import DS from 'ember-data'`
 `import ENV from '../config/environment'`
 `import {SimwmsHeaders, Singleton} from 'simwms-shared'`
 
-PaymentSubscriptionAdapter = ActiveModelAdapter.extend SimwmsHeaders, Singleton,
+PaymentSubscriptionAdapter = DS.JSONAPIAdapter.extend SimwmsHeaders, Singleton,
   host: ENV.host
   namespace: ENV.apiaNamespace
 

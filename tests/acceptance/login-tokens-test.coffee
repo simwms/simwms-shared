@@ -8,7 +8,7 @@ userParams =
   password: "password123"
   username: "test-user-no-#{Math.random()}"
 
-module 'Acceptance: CurrentUser',
+module 'Acceptance: LoginTokens',
   beforeEach: ->
     @application = startApp()
     ###
@@ -39,10 +39,9 @@ test 'registration and session', (assert) ->
     .catch (errors) =>
       assert.deepEqual errors, {}, "should not get here"
   andThen =>
-    @currentUser.clearErrors()
-    @currentUser.login
-      email: userParams.email
-      password: "wrong-pass"
+    @currentUser.set "email", userParams.email
+    @currentUser.set "password", "wrong-pass"
+    @currentUser.login()
     .catch (errors) ->
       assert.ok errors, "we should have not be logged in given the wrong password"
     .finally =>
@@ -56,8 +55,9 @@ test 'registration and session', (assert) ->
         system: []
       assert.deepEqual errors.get("core"), expected, "we should have the password error"
   andThen =>
-    @currentUser.clearErrors()
-    @currentUser.login userParams
+    @currentUser.set "email", userParams.email
+    @currentUser.set "password", userParams.password
+    @currentUser.login()
     .then (session) ->
       assert.notOk session.get("hasErrors"), "we should not have errors"
       assert.ok session.get("isLoggedIn"), "login should work"
@@ -77,7 +77,6 @@ test 'registration and session', (assert) ->
       .catch (errors) ->
         assert.notOk true, "logging out should not cause trouble"
   andThen =>
-    @currentUser.clearErrors()
     @currentUser.login userParams
     .then (session) ->
       assert.notOk session.get("hasErrors"), "repeated login should still produce no errors"

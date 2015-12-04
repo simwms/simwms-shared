@@ -1,9 +1,8 @@
-`import Ember from 'ember'`
-`import ActiveModelAdapter from 'active-model-adapter'`
+`import DS from 'ember-data'`
 `import ENV from '../config/environment'`
 `import {SimwmsHeaders} from 'simwms-shared'`
 
-AccountDetailAdapter = ActiveModelAdapter.extend SimwmsHeaders,
+AccountDetailAdapter = DS.JSONAPIAdapter.extend SimwmsHeaders,
   host: ENV.host
   namespace: ENV.apixNamespace
   

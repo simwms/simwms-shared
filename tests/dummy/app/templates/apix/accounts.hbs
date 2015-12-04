@@ -1,0 +1,10 @@
+<div class="col-xs-12">
+  <div class="list-group">
+    {{#each model as |account|}}
+      <div class="list-group-item" id="account-{{account.id}}" {{action "activate" account}}>
+        <h4>{{account.companyName}}</h4>
+        <div>{{account.permalink}}</div>
+      </div>
+    {{/each}}
+  </div>
+</div>

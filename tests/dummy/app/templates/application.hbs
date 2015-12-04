@@ -1,3 +1,29 @@
-<h2 id="title">Welcome to Ember</h2>
-
-{{outlet}}
+<div class="jumbotron">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 id="title">
+          Welcome to 
+          {{#link-to "index"}}simwms-shared{{/link-to}}
+        </h2>
+        <p>Here we have the js-based data models for interfacing with the back end and ensuring quality through acceptance testing</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      {{#if currentUser.accountLoggedIn}}
+        <div class="alert alert-info" id="account-logged-in-alert">Account Logged In!</div>
+      {{/if}}
+      {{#if currentUser.isLoggedIn}}
+        <div class="alert alert-success" id="is-logged-in-alert">User Logged In!</div>
+        <button id="logout-btn" class="btn btn-lg btn-danger" {{action "logout"}}>Logout</button>
+      {{/if}}
+    </div>
+  </div>
+  <div class="row">
+    {{outlet}}
+  </div>
+</div>

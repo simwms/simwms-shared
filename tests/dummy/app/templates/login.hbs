@@ -1,0 +1,24 @@
+<div class="col-xs-12">
+  <div class="well">
+    <p>
+      email: test@test.test
+    </p>
+    <p>
+      password: password123
+    </p>
+  </div>
+</div>
+<div class="col-xs-12">
+  {{#if currentUser.isLoggedIn}}
+    <h1 id="success">Login Successful!</h1>
+  {{else}}
+    {{#em-form-for model action="submit" as |f|}}
+      {{em-email-field f}}
+      {{em-password-field f}}
+      
+      <button class="btn btn-lg btn-primary" type="submit" id="token">
+        Submit
+      </button>
+    {{/em-form-for}}
+  {{/if}}
+</div>
