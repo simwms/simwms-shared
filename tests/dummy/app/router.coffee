@@ -11,5 +11,7 @@ Router.map ->
   @route "login"
   @route "apix", path: "/apix", ->
     @route "accounts", path: "/accounts"
+  @route "apiz", path: "/apiz", ->
+    @route "tiles", path: "/tiles"
 
 `export default Router`

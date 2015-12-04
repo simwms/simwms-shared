@@ -1,0 +1,10 @@
+<div class="col-xs-12">
+  <div class="list-group">
+    {{#each model as |tile|}}
+      <div class="list-group-item" id="tile-{{tile.id}}">
+        <h4>{{tile.tileType}} -- {{tile.tileName}}</h4>
+        <div>@({{tile.x}}, {{tile.y}})</div>
+      </div>
+    {{/each}}
+  </div>
+</div>

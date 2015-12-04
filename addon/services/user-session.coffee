@@ -51,6 +51,7 @@ UserSession = Service.extend Evented,
       @setFrom "accountToken", params
       @setFrom "rememberToken", params
     @login()
+    .then => @accountLogin()
   accountLogout: ->
     @set "simwmsAccountSession", null
     @set "meta", null
