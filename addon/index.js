@@ -6,6 +6,18 @@ import SimwmsHeaders from './mixins/simwms-headers';
 import Money from './utils/money';
 import TileCore from './mixins/tile-core';
 import LineCore from './mixins/line-core';
+import AppointmentCore from './mixins/appointment-core';
 import UnderscoreSerializer from './mixins/underscore-serializer';
-export {UserSession, Singleton, Atomic, validateAccount, SimwmsHeaders, Money, LineCore, TileCore, UnderscoreSerializer};
+export {
+  AppointmentCore,
+  UserSession, 
+  Singleton, 
+  Atomic, 
+  validateAccount, 
+  SimwmsHeaders, 
+  Money, 
+  LineCore, 
+  TileCore, 
+  UnderscoreSerializer
+};
 export default UserSession;

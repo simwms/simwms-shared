@@ -20,10 +20,19 @@
       {{#if currentUser.isLoggedIn}}
         <div class="alert alert-success" id="is-logged-in-alert">User Logged In!</div>
         <button id="logout-btn" class="btn btn-lg btn-danger" {{action "logout"}}>Logout</button>
+        {{#link-to "apix.accounts" class="btn btn-lg btn-default"}}
+          Accounts
+        {{/link-to}}
       {{/if}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      {{#link-to "index" class="btn btn-lg btn-default"}}Back to Index{{/link-to}}
     </div>
   </div>
   <div class="row">
     {{outlet}}
   </div>
 </div>
+{{ember-notify messageStyle="bootstrap" closeAfter=10000}}

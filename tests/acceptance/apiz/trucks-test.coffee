@@ -1,9 +1,9 @@
 `import Ember from 'ember'`
 `import { module, test } from 'qunit'`
-`import startApp from '../../tests/helpers/start-app'`
+`import startApp from '../../../tests/helpers/start-app'`
 `import Fixtures from '../../tests/helpers/fixtures'`
 
-module 'Acceptance: ApizTiles',
+module 'Acceptance: ApizTrucks',
   beforeEach: ->
     @application = startApp()
     ###
@@ -22,18 +22,23 @@ module 'Acceptance: ApizTiles',
     Cookies.remove "simwms-account-session"
     Ember.run @application, 'destroy'
 
-test 'visiting /apiz/tiles', (assert) ->
+test 'visiting /apiz/trucks', (assert) ->
   visit "/"
-
-  andThen =>
-    @currentUser.smartLogin Fixtures
-
+  count = 0
   andThen =>
     assert.ok @currentUser.get("isLoggedIn"), "our fixtures should get us logged in"
     assert.ok @currentUser.get("accountLoggedIn"), "we should log the account in successfully"
-    visit "/apiz/tiles"
+    visit "/apiz/trucks"
 
-  andThen =>
-    assert.equal currentURL(), '/apiz/tiles'
-    assert.ok find(".list-group-item")
-    click "#logout-btn"
+  andThen ->
+    assert.equal currentURL(), '/apiz/trucks'
+    count = find(".list-group-item").length
+    visit "/apiz/trucks/new"
+
+  andThen ->
+    fillIn "input[name=arrivedAt]", moment().format()
+    click "button[type=submit]"
+
+  andThen ->
+    assert.equal currentURL, "apiz/trucks"
+    assert.equal count + 1, find(".list-group-item").length

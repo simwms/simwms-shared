@@ -15,5 +15,6 @@ module.exports = function(defaults) {
   // app.import(app.bowerDirectory + "/js-cookie/src/js.cookie.js");
   app.import(app.bowerDirectory + "/bootstrap/dist/css/bootstrap.min.css");
   app.import(app.bowerDirectory + "/bootstrap/dist/css/bootstrap-theme.min.css");
+  
   return app.toTree();
 };

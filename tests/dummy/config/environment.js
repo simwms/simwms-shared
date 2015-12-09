@@ -10,6 +10,7 @@ module.exports = function(environment) {
     apiaNamespace: "apia",
     apixNamespace: "apix",
     apizNamespace: "apiz",
+    socketNamespace: "ws://localhost:4000/socket",
     locationType: 'auto',
     contentSecurityPolicy: { 
       "connect-src": "'self' ws://localhost:4000 https://*.amazonaws.com http://*.simwms.com https://*.herokuapp.com http://localhost:4000",

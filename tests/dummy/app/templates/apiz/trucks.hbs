@@ -1,0 +1,27 @@
+<div class="col-xs-12">
+  <div class="list-group">
+    {{#each model as |truck|}}
+      <div class="list-group-item pointer" id="truck-{{truck.id}}">
+        <h4>{{truck.id}}</h4>
+        <div>{{truck.arrivedAt}}</div>
+        <button class="btn btn-warning btn-lg" {{action "kill" truck}}>&times;</button>
+      </div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="col-xs-12">
+  {{#link-to "apiz.trucks.new" class="btn btn-default"}}New Truck{{/link-to}}
+</div>
+<div class="col-xs-12">
+  <div class="alert alert-info">
+    <ul>
+      <li>Onsite Trucks: {{model.length}}</li>
+      <li>channel-topic: {{trucksChan.topic}}</li>
+      <li>channel-state: {{trucksChan.state}}</li>
+      <li>socket-state: {{socket.state}}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="col-xs-12">{{outlet}}</div>
