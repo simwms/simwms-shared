@@ -12,7 +12,10 @@ Report = DS.Model.extend
   link: computed "id", "accountId", "startAt", "finishAt",
     get: ->
       return if isBlank @get "id"
-      query = @store.serialize @
+      query =
+        account_id: @get("accountId")
+        start_at: @get("startAt")
+        finish_at: @get("finishAt")
       url = [printHost, printNamespace, "reports", @get("id")]
       .filter isPresent
       .join("/")
