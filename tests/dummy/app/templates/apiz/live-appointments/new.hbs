@@ -1,0 +1,13 @@
+{{#em-form-for model action="submit" as |f|}}
+
+  {{em-select-field f name="appointmentType" options=apptTypes}}
+  {{em-text-field f name="materialDescription" prefix="fa-cubes"}}
+  {{em-text-field f name="company" prefix="fa-institution"}}
+  {{em-datetime-field f name="expectedAt" prefix="fa-calendar"}}
+
+  <div class="actions">
+    <button type="submit" class="btn btn-lg btn-default">
+      Submit
+    </button>
+  </div>
+{{/em-form-for}}

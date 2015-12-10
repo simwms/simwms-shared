@@ -6,6 +6,7 @@ import SimwmsHeaders from './mixins/simwms-headers';
 import Money from './utils/money';
 import TileCore from './mixins/tile-core';
 import LineCore from './mixins/line-core';
+import LogCore from './mixins/log-core';
 import AppointmentCore from './mixins/appointment-core';
 import UnderscoreSerializer from './mixins/underscore-serializer';
 export {
@@ -18,6 +19,7 @@ export {
   Money, 
   LineCore, 
   TileCore, 
+  LogCore, 
   UnderscoreSerializer
 };
 export default UserSession;
